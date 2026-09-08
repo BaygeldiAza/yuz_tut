@@ -1,26 +1,34 @@
 import ollama
-from rules import rule_based_extract
+import json
 
-MODEL_NAME = "hf.co/google/gemma-4-E2B-it-qat-q4_0-gguf"
+SYSTEM_PROMPT = """Türkmen dilindäki ulanyjy sözlemini oka.
+4-5 sany anyk, konkret açar söz/söz düzümi ýaz (ýer, zat, hereket ýa-da zerurlyk atlary).
+Abstrakt ýa-da düşündiriş sözlerini ulanma.
+Diňe JSON gaýtar: {"keywords": ["...", "...", "..."]}
+Başga hiç zat ýazma."""
 
-#SYSTEM_PROMPT = 
+MODEL = "hf.co/google/gemma-4-E2B-it-qat-q4_0-gguf"
 
-
-def llm_compress(query: str) -> str:
+def llm_fallback(query: str) -> list[str]:
     response = ollama.chat(
-        model=MODEL_NAME,
+        model=MODEL,
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": query}
         ],
-        keep_alive="30m"
+        format="json",
+        options={
+            "temperature": 0,
+            "num_predict": 30,
+            "keep_alive": "30m"
+        }
     )
-    return response["message"]["content"].strip()
 
-
-def llm_fallback(query: str) -> dict:
-    short_query = llm_compress(query)
-    result = rule_based_extract(short_query)
-    if result["category"] is None:
-        return {"category": None, "sort_by": None, "open_now_only": False}
-    return result
+    try:
+        data = json.loads(response["message"]["content"])
+        keywords = data.get("keywords", [])
+        if isinstance(keywords, list):
+            return [str(k).strip() for k in keywords if str(k).strip()]
+        return []
+    except (json.JSONDecodeError, KeyError, TypeError):
+        return []
