@@ -1,7 +1,8 @@
 import chromadb
 from sentence_transformers import SentenceTransformer
+import os
 
-CHROMA_PATH = "ai/indexing/chroma_db"
+CHROMA_PATH = os.path.join(os.path.dirname(__file__), "..", "indexing", "chroma_db")
 COLLECTION_NAME = "locations"
 MODEL_NAME = "intfloat/multilingual-e5-base"
 
