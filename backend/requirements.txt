@@ -9,5 +9,4 @@ redis
 PyJWT
 pwdlib
 pytest
-
-
+asyncpg

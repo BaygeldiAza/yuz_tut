@@ -4,9 +4,16 @@ WORKDIR /code
 
 COPY requirements.txt .
 
-RUN pip install --no-cache-dir --timeout=120 --retries=5 -r requirements.txt
+ARG HTTP_PROXY
+ARG HTTPS_PROXY
+
+RUN pip install --no-cache-dir \
+    --proxy "$HTTP_PROXY" \
+    -r requirements.txt
 
 COPY ./app ./app
+COPY ./alembic ./alembic
+COPY ./alembic.ini ./alembic.ini
 
 EXPOSE 8000
 
