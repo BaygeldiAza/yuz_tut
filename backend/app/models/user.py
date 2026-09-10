@@ -1,15 +1,18 @@
 from datetime import datetime, timezone
 from sqlalchemy import Boolean, DateTime, String
 from sqlalchemy.orm import Mapped, mapped_column
+import uuid
+from sqlalchemy.dialects.postgresql import UUID
 
 from app.database.base import Base
 
 class User(Base):
     __tablename__ = "users"
 
-    id: Mapped[int] = mapped_column(
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
         primary_key=True,
-        index=True,
+        default=uuid.uuid6,
     )
 
     email: Mapped[str] = mapped_column(

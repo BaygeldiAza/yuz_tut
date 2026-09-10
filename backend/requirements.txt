@@ -10,3 +10,4 @@ PyJWT
 pwdlib
 pytest
 asyncpg
+uuid6
