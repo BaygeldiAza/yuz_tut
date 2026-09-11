@@ -9,8 +9,10 @@ class Settings(BaseSettings):
     redis_url: str = "redis://redis:6379/0"
 
     
-    jwt_secret: str = "change-me-in-production"
-    jwt_algorithm: str = "HS256"
+    jwt_secret: str 
+    jwt_algorithm: str 
+    access_token_expire_minutes: int 
+
 
     model_config = SettingsConfigDict(
         env_file=".env",

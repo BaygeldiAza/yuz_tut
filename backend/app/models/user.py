@@ -3,6 +3,7 @@ from sqlalchemy import Boolean, DateTime, String
 from sqlalchemy.orm import Mapped, mapped_column
 import uuid
 from sqlalchemy.dialects.postgresql import UUID
+from uuid6 import uuid6
 
 from app.database.base import Base
 
@@ -12,7 +13,7 @@ class User(Base):
     id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
         primary_key=True,
-        default=uuid.uuid6,
+        default=uuid6,
     )
 
     email: Mapped[str] = mapped_column(
@@ -30,7 +31,7 @@ class User(Base):
     )
 
     password_hash: Mapped[str] = mapped_column(
-        str(255),
+        String(255),
         nullable=False,
     )
 
