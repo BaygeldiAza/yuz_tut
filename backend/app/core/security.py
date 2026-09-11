@@ -33,8 +33,31 @@ def create_access_token(subject: str, expires_minutes: int = settings.access_tok
 
     payload = {
         "sub": subject,
+        "type": "access",
         "exp": expire,
         }
+
+    return jwt.encode(
+        payload,
+        settings.jwt_secret,
+        algorithm=settings.jwt_algorithm,
+    )
+
+def create_refresh_token(subject: str, expires_days: int | None=None) -> str:
+    """
+    Create long-lived JWT refresh token
+    """
+
+    if expires_days is None:
+        expires_days = settings.refresh_token_expire_days
+
+    expire = datetime.now(timezone.utc) + timedelta(days = expires_days)
+
+    payload = {
+        "sub": subject,
+        "type": "refresh",
+        "exp": expire,
+    }
 
     return jwt.encode(
         payload,
@@ -47,8 +70,28 @@ def decode_access_token(token: str)-> dict:
     Decode and validate a JWT access token.
     """
 
-    return jwt.decode(
+    payload = jwt.decode(
         token,
         settings.jwt_secret,
         algorithms=[settings.jwt_algorithm],
     )
+
+    if payload.get("type") != "access":
+        raise jwt.InvalidTokenError("Token is not an access token")
+
+    return payload
+
+def decode_refresh_token(token: str)-> dict:
+    """
+    Decode and validate a JWT refresh token
+    """
+    payload = jwt.decode(
+        token,
+        settings.jwt_secret,
+        algorithms=[settings.jwt_algorithm]   
+    )
+
+    if payload.get("type") != "refresh":
+        raise jwt.InvalidTokenError("Token is not an refresh token")
+
+    return payload

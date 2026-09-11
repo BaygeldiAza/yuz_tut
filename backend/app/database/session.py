@@ -1,26 +1,26 @@
 #Session is connection manager between Slqalchemy and Postgresql 
 
-from collections.abc import Generator
-from sqlalchemy import create_engine
-from sqlalchemy.orm import Session, sessionmaker
+from collections.abc import AsyncGenerator
+from sqlalchemy.ext.asyncio import (
+    AsyncSession,
+    async_sessionmaker,
+    create_async_engine,
+)
 
 from app.config import settings
 
-engine = create_engine(
+engine = create_async_engine(
     settings.database_url,
     pool_pre_ping=True,
 )
 
-SessionLocal = sessionmaker(
+SessionLocal = async_sessionmaker(
     bind=engine,
+    class_=AsyncSession, 
     autoflush=False,
-    autocommit=False
+    expire_on_commit=False,
 )
 
-def get_db() -> Generator[Session, None, None]:
-    db = SessionLocal()
-
-    try:
+async def get_db() -> AsyncGenerator[AsyncSession,None]:
+    async with SessionLocal() as db:
         yield db
-    finally:
-        db.close()
