@@ -8,7 +8,7 @@ CATEGORY_SYNONYMS = {
     "Elektronika": ["elektronika", "noutbuk", "kompýuter", "printer"],
     "Pizza": ["pizza"],
     "Milli tagamlar": ["milli tagam", "milli restoran", "gutap", "çekdirme", "palow"],
-    "Gurluşyk we Hojalyk harytlary": ["gurluşyk haryt", "hojalyk haryt"],
+    "Gurluşyk we Hojalyk harytlary": ["gurluşyk haryt", "hojalyk haryt","gurlushyk harytlar"],
     "Mebel we interýer": ["mebel", "diwan", "krowat", "stol", "stul"],
     "Parfýumeriýa we Kosmetika": ["atyr", "kosmetika", "parfýumeriýa"],
     "Mangal": ["mangal", "kebap", "şaşlyk"],
