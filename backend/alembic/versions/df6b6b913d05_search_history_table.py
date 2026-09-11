@@ -1,8 +1,8 @@
 """search history table
 
-Revision ID: 96289fa0dd8c
+Revision ID: df6b6b913d05
 Revises: fca6ab479c5d
-Create Date: 2026-09-11 15:02:23.752830
+Create Date: 2026-09-11 15:19:15.233323
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '96289fa0dd8c'
+revision: str = 'df6b6b913d05'
 down_revision: Union[str, Sequence[str], None] = 'fca6ab479c5d'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None

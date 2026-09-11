@@ -1,4 +1,5 @@
-from uuid import uuid6
+import uuid
+from uuid6 import uuid6
 from datetime import datetime, timezone 
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy import DateTime, ForeignKey, Index, Text
@@ -10,13 +11,13 @@ from app.database.base import Base
 class SearchHistory(Base):
     __tablename__ = "search_history"
 
-    id: Mapped[UUID] = mapped_column(
+    id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
         primary_key=True,
         default=uuid6,
     )
 
-    user_id : Mapped[UUID] = mapped_column(
+    user_id : Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("users.id", ondelete="CASCADE", onupdate="CASCADE"),
         nullable=False,
