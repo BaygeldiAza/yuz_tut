@@ -2,7 +2,7 @@ from understanding.understand import understand_query
 from retrieval.search import LocationSearch
 
 searcher = LocationSearch()
-TOP_N = 10
+TOP_N = 7
 
 
 def retrieve(query: str) -> dict:
