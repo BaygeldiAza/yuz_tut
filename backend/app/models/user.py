@@ -30,7 +30,7 @@ class User(Base):
     )
 
     password_hash: Mapped[str] = mapped_column(
-        str(255),
+        String(255),
         nullable=False,
     )
 
