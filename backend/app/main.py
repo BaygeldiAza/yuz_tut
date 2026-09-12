@@ -1,7 +1,7 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from sqlalchemy import text
-
-from app.database.session import engine
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.database.session import get_db
 
 app = FastAPI(
     title="Yuz-Tut-Backend",
@@ -18,9 +18,9 @@ async def health():
     return {"status": "ok"}
 
 @app.get("/health/database")
-async def database_health_check():
-    with engine.connect() as connection:
-        connection.execute(text("SELECT 1"))
+async def database_health_check(db: AsyncSession = Depends(get_db)):
+
+    await db.execute(text("SELECT 1"))
 
     return {
         "status": "ok",
