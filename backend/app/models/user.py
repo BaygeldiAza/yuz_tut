@@ -25,7 +25,7 @@ class User(Base):
 
     username: Mapped[str] = mapped_column(
         String(100),
-        unique=True,
+        unique=False,
         index=True,
         nullable=False,
     )
