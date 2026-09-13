@@ -21,7 +21,7 @@ async def register_user(db: AsyncSession, user_data: UserRegister,) ->User:
         email=user_data.email,
         )
 
-    if existing_user.email == user_data.email:
+    if existing_user is not None:
         raise ValueError("Email is already taken.")
 
     return await create_user(
