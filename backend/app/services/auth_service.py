@@ -57,7 +57,7 @@ def create_user_tokens(user: User)-> dict[str, str]:
     subject = str(user.id)
 
     return{
-        "access token": create_access_token(subject),
+        "access_token": create_access_token(subject),
         "refresh_token": create_refresh_token(subject),
         "token_type": "bearer",
     }
