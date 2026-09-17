@@ -49,5 +49,23 @@ services:
     ports:
       - "6380:6379"
 
+  test-db:
+    image: postgres:17
+    container_name: yuz_tut_test_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: yuz_tut_test
+    ports:
+      - "5433:5432"
+    volumes:
+      - test_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d yuz_tut_test"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
 volumes:
   pgdata:
+  test_postgres_data:
