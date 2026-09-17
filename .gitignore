@@ -1,0 +1,11 @@
+data/sections/
+data/locations_merged.jsonl
+data/locations_embedding_ready.jsonl
+ai/indexing/chroma_db/
+ai/.venv
+ai/retrieval/__pycache__/
+ai/understanding/__pycache__/
+ai/understanding/test_cases/
+.agents/
+ai/ranking/__pycache__/
+ai/__pycache__

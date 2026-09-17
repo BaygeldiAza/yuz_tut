@@ -1,31 +1,21 @@
 import ollama
-from understanding.llm_fallback import MODEL  # bir model ulanylýar
-from generation.prompts import GENERATION_SYSTEM_PROMPT
+
+from ai.config import OLLAMA_MODEL, OLLAMA_KEEP_ALIVE, GENERATION_TEMPERATURE
+from .prompts import SYSTEM_PROMPT, build_user_prompt
 
 
-def format_results_for_prompt(ranked_results: list[dict]) -> str:
-    lines = []
-    for r in ranked_results[:5]:
-        meta = r["metadata"]
-        dist = f"{r['distance_km']:.1f}km" if r.get("distance_km") is not None else "aralyk belli däl"
-        status = "açyk" if r.get("is_open_now") else "ýapyk"
-        lines.append(f"- {meta.get('name_tm')} | {dist} | {status} | {meta.get('address_tm')}")
-    return "\n".join(lines)
-
-
-def generate_response(ranked_results: list[dict]) -> str:
-    if not ranked_results:
-        return "Gynansak-da, gözlegiňize gabat gelýän ýer tapylmady."
-
-    context = format_results_for_prompt(ranked_results)
+def generate_response(query: str, results: list[dict]) -> str:
+    user_prompt = build_user_prompt(query, results)
 
     response = ollama.chat(
-        model=MODEL,
+        model=OLLAMA_MODEL,
         messages=[
-            {"role": "system", "content": GENERATION_SYSTEM_PROMPT},
-            {"role": "user", "content": context}
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": user_prompt},
         ],
-        options={"temperature": 0}
+        keep_alive=OLLAMA_KEEP_ALIVE,
+        options={"temperature": GENERATION_TEMPERATURE},
+        think=False,
     )
 
     return response["message"]["content"]
