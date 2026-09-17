@@ -1,74 +1,42 @@
 import chromadb
 from sentence_transformers import SentenceTransformer
-import os
 
-CHROMA_PATH = os.path.join(os.path.dirname(__file__), "..", "indexing", "chroma_db")
-COLLECTION_NAME = "locations"
-MODEL_NAME = "intfloat/multilingual-e5-base"
+from ai.config import CHROMA_PATH, CHROMA_COLLECTION, EMBEDDING_MODEL, QUERY_PREFIX
 
 
 class LocationSearch:
-    def __init__(self, chroma_path: str = CHROMA_PATH, collection_name: str = COLLECTION_NAME):
-        self.model = SentenceTransformer(MODEL_NAME)
-        self.client = chromadb.PersistentClient(path=chroma_path)
-        self.collection = self.client.get_collection(collection_name)
+    def __init__(self):
+        self.model = SentenceTransformer(EMBEDDING_MODEL)
+        self.client = chromadb.PersistentClient(path=CHROMA_PATH)
+        self.collection = self.client.get_collection(CHROMA_COLLECTION)
 
-    def search(self, query: str, top_n: int = 10) -> list[dict]:
-        query_embedding = self.model.encode(
-            f"query: {query}",
-            normalize_embeddings=True,
-        ).tolist()
+    def query(self, query_text: str, top_n: int, category: str | None = None) -> list[dict]:
+        embedding = self.model.encode(QUERY_PREFIX + query_text).tolist()
+
+        where = {"categories": category} if category else None
 
         results = self.collection.query(
-            query_embeddings=[query_embedding],
+            query_embeddings=[embedding],
             n_results=top_n,
+            where=where,
         )
 
-        output = []
+        return self._format_results(results)
+
+    @staticmethod
+    def _format_results(results: dict) -> list[dict]:
+        formatted = []
         ids = results["ids"][0]
-        distances = results["distances"][0]
-        metadatas = results["metadatas"][0]
         documents = results["documents"][0]
+        metadatas = results["metadatas"][0]
+        distances = results["distances"][0]
 
         for i in range(len(ids)):
-            output.append({
+            formatted.append({
                 "id": ids[i],
-                "score": 1 - distances[i],
                 "embedding_text": documents[i],
                 "metadata": metadatas[i],
+                "score": 1 - distances[i],
             })
 
-        return output
-
-
-TEST_QUERIES = [
-    "dermanhana gerek",
-    "gije işleýän restoran gerek",
-    "8 marta sowgat alar ýaly dükan maslahat ber",
-    "masynyn dowuldi haýal wagt awto serwis hyzmatyny tapyp ber",
-    "elim kesildi gan akya name etmeli, yakyndan apteka",
-    "arzan telefon dukany",
-    "iýmit",
-    "cocuk oyuncak dukany",
-    "toy uçin sowgatlyk zat",
-    "kofe icesim gelya",
-    "gozel salon gerek",
-    "kir ýuwujy maşyn abatlaýan yer",
-    "cagalar bagy",
-    "restoran",
-    "bank",
-    "kitap dukany",
-    "welosiped satyn alyar yaly yer",
-    "guycli internet operator",
-    "diş lukmany",
-    "mata we tikin esbaplary",
-]
-
-
-if __name__ == "__main__":
-    searcher = LocationSearch()
-    for query in TEST_QUERIES:
-        print(f"\n=== {query} ===")
-        results = searcher.search(query, top_n=5)
-        for r in results:
-            print(f"{r['score']:.3f}  {r['metadata'].get('name_tm')}  ({r['id']})")
+        return formatted
