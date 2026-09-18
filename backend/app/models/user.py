@@ -1,11 +1,17 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
 from datetime import datetime, timezone
 from sqlalchemy import Boolean, DateTime, String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 import uuid
 from sqlalchemy.dialects.postgresql import UUID
 from uuid6 import uuid6
 
 from app.database.base import Base
+if TYPE_CHECKING:
+    from app.models.search_history import SearchHistory
+
 
 class User(Base):
     __tablename__ = "users"
@@ -54,3 +60,8 @@ class User(Base):
         nullable=False,
     )
 
+    search_history: Mapped[list["SearchHistory"]] = relationship(
+        "SearchHistory",
+        back_populates="user",
+        cascade="all, delete-orphan",
+    )
