@@ -2,8 +2,8 @@ import json
 import chromadb
 from sentence_transformers import SentenceTransformer
 
-JSONL_PATH = "../../data/locations_embedding_ready.jsonl"
-CHROMA_PATH = "chroma_db"
+JSONL_PATH = "data/locations_embedding_ready.jsonl"
+CHROMA_PATH = "ai/indexing/chroma_db"
 COLLECTION_NAME = "locations"
 MODEL_NAME = "intfloat/multilingual-e5-base"
 BATCH_SIZE = 64
