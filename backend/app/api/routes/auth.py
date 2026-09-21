@@ -18,7 +18,7 @@ from app.core.dependencies import get_current_user
 from app.models.user import User
 
 router = APIRouter (
-    prefix="/auth",
+    prefix="/api/v1/auth",
     tags=["Authenticaton"]
 )
 

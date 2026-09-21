@@ -4,7 +4,7 @@ import uuid
 from uuid6 import uuid6
 from datetime import datetime, timezone 
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy import DateTime, ForeignKey, Index, Text
+from sqlalchemy import DateTime, ForeignKey, Index, Text, Boolean
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 
@@ -39,6 +39,14 @@ class SearchHistory(Base):
         nullable=False,
         index=True,
     )
+    is_hidden: Mapped[bool] = mapped_column(
+        Boolean,
+        default=False,
+        nullable=False,
+        index=True
+    )
+
+
     user: Mapped["User"] = relationship(
         "User",
         back_populates="search_history",
