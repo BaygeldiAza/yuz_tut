@@ -52,54 +52,27 @@ def run_migrations_online() -> None:
     """
     Run migrations in 'online' mode.
 
-    Alembic is currently being executed from the host machine,
-    while the database URL is configured for Docker.
-
-    Docker uses:
+    Alembic runs inside the Docker API container, so the
+    PostgreSQL service is reachable through the Docker hostname:
         postgres
-
-    The host machine needs:
-        localhost
-
-    Therefore, we convert the Docker hostname to localhost
-    before creating the synchronous Alembic database engine.
     """
 
-    # Start with the database URL from our application settings.
     database_url = settings.database_url
 
-    # Convert the asyncpg driver to the synchronous psycopg driver.
-    #
-    # The application uses asyncpg, but Alembic's current
-    # migration setup uses a synchronous SQLAlchemy engine.
+    # Convert the asyncpg driver used by the application
+    # to the synchronous psycopg driver used by Alembic.
     database_url = database_url.replace(
         "postgresql+asyncpg://",
         "postgresql+psycopg://",
     )
 
-    # Convert the Docker PostgreSQL hostname to localhost.
-    #
-    # Inside Docker:
-    #     postgres:5432
-    #
-    # From the host machine:
-    #     localhost:5432
-    database_url = database_url.replace(
-        "@postgres:",
-        "@localhost:",
-    )
-
-    # Print the final URL so we can verify that Alembic
-    # is using the correct database connection.
     print(f"Alembic database URL: {database_url}")
 
-    # Create the synchronous SQLAlchemy engine used by Alembic.
     connectable = create_engine(
         database_url,
         poolclass=pool.NullPool,
     )
 
-    # Connect to PostgreSQL and run the migrations.
     with connectable.connect() as connection:
         context.configure(
             connection=connection,
@@ -108,7 +81,6 @@ def run_migrations_online() -> None:
 
         with context.begin_transaction():
             context.run_migrations()
-
 
 # Determine whether Alembic is running in offline or online mode.
 if context.is_offline_mode():
