@@ -4,8 +4,8 @@ from ai.config import OLLAMA_MODEL, OLLAMA_KEEP_ALIVE, GENERATION_TEMPERATURE
 from .prompts import SYSTEM_PROMPT, build_user_prompt
 
 
-def generate_response(query: str, results: list[dict]) -> str:
-    user_prompt = build_user_prompt(query, results)
+def generate_response(query: str, results: list[dict], category: str | None = None) -> str:
+    user_prompt = build_user_prompt(query, results, category=category)
 
     response = ollama.chat(
         model=OLLAMA_MODEL,
