@@ -9,7 +9,7 @@ async def test_register_user(client: AsyncClient) -> None:
     email = f"user-{uuid6().hex[:8]}@example.com"
 
     response = await client.post(
-        "/auth/register",
+        "/api/v1/auth/register",
         json={
             "email": email,
             "username": "testuser",
@@ -42,12 +42,12 @@ async def test_register_duplicate_email(client: AsyncClient) -> None:
     }
 
     first_response = await client.post(
-        "/auth/register",
+        "/api/v1/auth/register",
         json=payload,
     )
 
     second_response = await client.post(
-        "/auth/register",
+        "/api/v1/auth/register",
         json={
             **payload,
             "username": "anotheruser",
@@ -64,7 +64,7 @@ async def test_login_user(client: AsyncClient) -> None:
     password = "strongpassword123"
 
     register_response = await client.post(
-        "/auth/register",
+        "/api/v1/auth/register",
         json={
             "email": email,
             "username": "loginuser",
@@ -75,7 +75,7 @@ async def test_login_user(client: AsyncClient) -> None:
     assert register_response.status_code == 201
 
     login_response = await client.post(
-        "/auth/login",
+        "/api/v1/auth/login",
         json={
             "email": email,
             "password": password,
@@ -96,7 +96,7 @@ async def test_login_with_wrong_password(client: AsyncClient) -> None:
     email = f"wrong-password-{uuid6().hex[:8]}@example.com"
 
     register_response = await client.post(
-        "/auth/register",
+        "api/v1/auth/register",
         json={
             "email": email,
             "username": "wrongpassworduser",
@@ -107,7 +107,7 @@ async def test_login_with_wrong_password(client: AsyncClient) -> None:
     assert register_response.status_code == 201
 
     login_response = await client.post(
-        "/auth/login",
+        "/api/v1/auth/login",
         json={
             "email": email,
             "password": "wrongpassword123",
@@ -123,7 +123,7 @@ async def test_oauth2_token_endpoint(client: AsyncClient) -> None:
     password = "strongpassword123"
 
     register_response = await client.post(
-        "/auth/register",
+        "/api/v1/auth/register",
         json={
             "email": email,
             "username": "tokenuser",
@@ -134,7 +134,7 @@ async def test_oauth2_token_endpoint(client: AsyncClient) -> None:
     assert register_response.status_code == 201
 
     token_response = await client.post(
-        "/auth/token",
+        "/api/v1/auth/token",
         data={
             "username": email,
             "password": password,

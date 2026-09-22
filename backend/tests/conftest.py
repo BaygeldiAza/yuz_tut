@@ -17,7 +17,7 @@ from app.main import app
 
 
 TEST_DATABASE_URL=(
-    "postgresql+asyncpg://postgres:postgres@localhost:5433/yuz_tut_test"
+    "postgresql+asyncpg://postgres:postgres@test-db:5432/yuz_tut_test"
 )
 
 test_engine = create_async_engine(
