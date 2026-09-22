@@ -3,16 +3,14 @@ from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database.session import get_db
-from app.routes.auth import router as auth_router
-
+from app.api.routes.auth import router as auth_router
+from app.api.routes.search_history import router as search_router   
 
 app = FastAPI(
     title="Yuz-Tut-Backend",
     description="Backend API for Yuz-Tut",
     version="1.0.0",
     )
-
-app.include_router(auth_router)
 
 @app.get("/")
 def message():
@@ -31,3 +29,5 @@ async def database_health_check(db: AsyncSession = Depends(get_db)):
         "status": "ok",
         "database": "connected"
     }
+app.include_router(auth_router)
+app.include_router(search_router)

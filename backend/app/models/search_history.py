@@ -1,12 +1,16 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
 import uuid
 from uuid6 import uuid6
 from datetime import datetime, timezone 
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy import DateTime, ForeignKey, Index, Text
-from sqlalchemy.orm import Mapped, mapped_column 
+from sqlalchemy import DateTime, ForeignKey, Index, Text, Boolean
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 
 from app.database.base import Base
-
+if TYPE_CHECKING:
+    from app.models.user import User
 
 class SearchHistory(Base):
     __tablename__ = "search_history"
@@ -35,6 +39,18 @@ class SearchHistory(Base):
         nullable=False,
         index=True,
     )
+    is_hidden: Mapped[bool] = mapped_column(
+        Boolean,
+        default=False,
+        nullable=False,
+        index=True
+    )
+
+
+    user: Mapped["User"] = relationship(
+        "User",
+        back_populates="search_history",
+    )
 
     __table_args__ = (
         Index(
@@ -43,3 +59,5 @@ class SearchHistory(Base):
             "created_at",
         ),
     )
+
+   
