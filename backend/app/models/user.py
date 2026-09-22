@@ -11,6 +11,7 @@ from uuid6 import uuid6
 from app.database.base import Base
 if TYPE_CHECKING:
     from app.models.search_history import SearchHistory
+    from app.models.conversation import Conversation
 
 
 class User(Base):
@@ -62,6 +63,12 @@ class User(Base):
 
     search_history: Mapped[list["SearchHistory"]] = relationship(
         "SearchHistory",
+        back_populates="user",
+        cascade="all, delete-orphan",
+    )
+
+    conversation: Mapped[list["Conversation"]] = relationship(
+        "Conversation",
         back_populates="user",
         cascade="all, delete-orphan",
     )

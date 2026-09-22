@@ -49,7 +49,7 @@ class Conversation(Base):
         index=True,
     )
 
-    user: Mapped["User"] = mapped_column(
+    user: Mapped["User"] = relationship(
         "User",
         back_populates="conversations",
     )
