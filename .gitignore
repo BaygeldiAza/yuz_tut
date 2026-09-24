@@ -9,3 +9,6 @@ ai/understanding/test_cases/
 .agents/
 ai/ranking/__pycache__/
 ai/__pycache__
+ai/indexing/__pycache__
+ai/generation/__pycache__
+frontend/node_modules
