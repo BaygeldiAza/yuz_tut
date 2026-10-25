@@ -72,7 +72,8 @@ backend/
 ├── .gitignore
 ├── Dockerfile
 ├── docker-compose.yml
-├── requirements.txt
+├── pyproject.toml
+├── uv.lock
 └── README.md
 ```
 
@@ -95,14 +96,19 @@ Install the following tools:
 - Docker
 - Docker Compose
 - Git
+- [uv](https://docs.astral.sh/uv/)
 
-Python is also required for local development.
+uv manages the project's dependencies and can install/select the required Python version. The backend supports Python 3.11 and newer.
 
-The current development environment uses:
+Install the project dependencies, including development and test tools:
 
-```text
-Python 3.14.4
+```bash
+uv sync --all-groups
 ```
+
+Use `uv run` for local commands so they run in the project's managed environment, for example `uv run pytest`.
+
+Add runtime dependencies with `uv add <package>` and development dependencies with `uv add --group dev <package>`. Commit both `pyproject.toml` and `uv.lock` after dependency changes.
 
 ---
 
