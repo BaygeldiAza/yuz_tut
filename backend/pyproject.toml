@@ -1,0 +1,27 @@
+[project]
+name = "yuz-tut-backend"
+version = "0.1.0"
+description = "Backend service for the Yuz Tut project"
+requires-python = ">=3.11"
+dependencies = [
+    "alembic",
+    "asyncpg",
+    "email-validator",
+    "fastapi",
+    "httpx",
+    "psycopg[binary]",
+    "pydantic-settings",
+    "PyJWT",
+    "pwdlib[argon2]",
+    "python-multipart",
+    "redis",
+    "sqlalchemy[asyncio]",
+    "uuid6",
+    "uvicorn[standard]",
+]
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "pytest-asyncio",
+]

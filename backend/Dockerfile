@@ -2,14 +2,15 @@ FROM python:3.11-slim
 
 WORKDIR /code
 
-COPY requirements.txt .
+COPY --from=ghcr.io/astral-sh/uv:0.12.10 /uv /uvx /bin/
 
 ARG HTTP_PROXY
 ARG HTTPS_PROXY
 
-RUN pip install --no-cache-dir \
-    --proxy "$HTTP_PROXY" \
-    -r requirements.txt
+ENV PATH="/code/.venv/bin:$PATH"
+
+COPY pyproject.toml uv.lock ./
+RUN uv sync --locked --no-dev --no-install-project
 
 COPY ./app ./app
 COPY ./alembic ./alembic
